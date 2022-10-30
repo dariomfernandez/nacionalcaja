@@ -32,7 +32,7 @@ def get_data_from_mysql():
         #print("DataFrame crudo:\r\n", result_dataFrame.head())
         print("Paso 4")
     except Exception as e:
-        st.write("EXCEPCION: " + str(3))
+        st.write("EXCEPCION: " + str(e))
         print("EXCEPCION: " + str(e))
     mydb.close() #close the connection
     return(result_dataFrame)
