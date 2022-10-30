@@ -1,4 +1,3 @@
 locales-all
-mariadb
 libmariadb3
 libmariadb-dev
