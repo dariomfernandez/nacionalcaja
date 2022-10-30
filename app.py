@@ -21,7 +21,7 @@ def get_data_from_mysql():
     try:
         #print("Paso 1")
         #mydb = mariadb.connect(host="34.176.213.25", database = nacionalDatabase, user="root", passwd="root")
-        mydb = mysql.connector.connect(host="34.176.213.25", port=3306, user="root", password="")
+        mydb = mysql.connector.connect(host="34.176.213.25", database = nacionalDatabase, port=3306, user="root", password="")
         #print("Paso 2")
         query = f"SELECT movimiento, numero, IF(flujo='ENTRADA', 1, -1)*importe AS importe, flujo, modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.fnd_movimiento_flujo AS t1 INNER JOIN (SELECT movimiento AS t2movim, numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.fnd_movimiento) AS t2 ON CONCAT(t1.movimiento, t1.numero)=CONCAT(t2.t2movim, t2.t2num) UNION SELECT 'COBRO', cobro, importe, 'ENTRADA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.vta_cobro_medio AS t1 INNER JOIN (SELECT numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.vta_cobro) AS t2 ON t1.cobro=t2.t2num UNION SELECT 'PAGO' AS movimiento, pago, -importe AS importe, 'SALIDA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago_medio AS t1 INNER JOIN (SELECT numero, DATE(fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago) AS t2 ON t1.pago=t2.numero;"
         #print("Paso 3")
