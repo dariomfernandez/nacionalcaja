@@ -5,7 +5,7 @@ import plotly.express as px  # pip install plotly-express
 import streamlit as st  # pip install streamlit
 #import mysql.connector as connection
 import mariadb
-import mysql.connector
+#import mysql.connector
 
 # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 st.set_page_config(page_title="Movimientos de caja", page_icon=":moneybag:", layout="wide")
