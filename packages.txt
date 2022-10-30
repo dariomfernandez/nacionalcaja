@@ -1,3 +1,4 @@
 locales-all
 libmariadb3
 libmariadb-dev
+mysql-common
