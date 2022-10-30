@@ -19,15 +19,15 @@ def get_data_from_mysql():
     result_dataFrame = None
     mydb = None
     try:
-        #print("Paso 1")
+        print("Paso 1")
         #mydb = mariadb.connect(host="34.176.213.25", database = nacionalDatabase, user="root", passwd="root")
         mydb = mysql.connector.connect(host=st.secrets["db_server"], database = st.secrets["db_name"], port=3306, user=st.secrets["db_username"], password=st.secrets["db_password"])
-        #print("Paso 2")
+        print("Paso 2")
         query = f"SELECT movimiento, numero, IF(flujo='ENTRADA', 1, -1)*importe AS importe, flujo, modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.fnd_movimiento_flujo AS t1 INNER JOIN (SELECT movimiento AS t2movim, numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.fnd_movimiento) AS t2 ON CONCAT(t1.movimiento, t1.numero)=CONCAT(t2.t2movim, t2.t2num) UNION SELECT 'COBRO', cobro, importe, 'ENTRADA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.vta_cobro_medio AS t1 INNER JOIN (SELECT numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.vta_cobro) AS t2 ON t1.cobro=t2.t2num UNION SELECT 'PAGO' AS movimiento, pago, -importe AS importe, 'SALIDA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago_medio AS t1 INNER JOIN (SELECT numero, DATE(fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago) AS t2 ON t1.pago=t2.numero;"
-        #print("Paso 3")
+        print("Paso 3")
         result_dataFrame = pd.read_sql(query, mydb, parse_dates={"t2fecha": {"format": "%d/%m/%y"}})
         #print("DataFrame crudo:\r\n", result_dataFrame.head())
-        #print("Paso 4")
+        print("Paso 4")
     except Exception as e:
         print("EXCEPCION: " + str(e))
     mydb.close() #close the connection
