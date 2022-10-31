@@ -12,6 +12,8 @@ st.set_page_config(page_title="Movimientos de caja", page_icon=":moneybag:", lay
 
 locale.setlocale(locale.LC_MONETARY, 'es_AR')
 
+gclougfuncurl = "https://southamerica-east1-nacionalgestion-366711.cloudfunctions.net/nacional"
+
 #nacionalDatabase = "vinasdealtura"
 
 # Obtener datos desde la db de Nacional
@@ -19,18 +21,20 @@ def get_data_from_mysql():
     result_dataFrame = None
     mydb = None
     try:
-        print("Paso 1")
-        st.write("Paso 1")
-        mydb = mariadb.connect(host=st.secrets["db_server"], database = st.secrets["db_name"], port=3306, user=st.secrets["db_username"], password=st.secrets["db_password"])
+        #print("Paso 1")
+        #st.write("Paso 1")
+        #mydb = mariadb.connect(host=st.secrets["db_server"], database = st.secrets["db_name"], port=3306, user=st.secrets["db_username"], password=st.secrets["db_password"])
         #mydb = mysql.connector.connect(host=st.secrets["db_server"], database = st.secrets["db_name"], port=3306, user=st.secrets["db_username"], password=st.secrets["db_password"])
-        st.write("Paso 2")
-        print("Paso 2")
+        #st.write("Paso 2")
+        #print("Paso 2")
         query = f"SELECT movimiento, numero, IF(flujo='ENTRADA', 1, -1)*importe AS importe, flujo, modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.fnd_movimiento_flujo AS t1 INNER JOIN (SELECT movimiento AS t2movim, numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.fnd_movimiento) AS t2 ON CONCAT(t1.movimiento, t1.numero)=CONCAT(t2.t2movim, t2.t2num) UNION SELECT 'COBRO', cobro, importe, 'ENTRADA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.vta_cobro_medio AS t1 INNER JOIN (SELECT numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.vta_cobro) AS t2 ON t1.cobro=t2.t2num UNION SELECT 'PAGO' AS movimiento, pago, -importe AS importe, 'SALIDA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago_medio AS t1 INNER JOIN (SELECT numero, DATE(fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago) AS t2 ON t1.pago=t2.numero;"
-        st.write("Paso 3")
-        print("Paso 3")
-        result_dataFrame = pd.read_sql(query, mydb, parse_dates={"t2fecha": {"format": "%d/%m/%y"}})
+        #st.write("Paso 3")
+        #print("Paso 3")
+        #result_dataFrame = pd.read_sql(query, mydb, parse_dates={"t2fecha": {"format": "%d/%m/%y"}})
+        result_dataFrame = pd.read_json(gclougfuncurl + "?stmt=" + urllib.parse.quote(query))
+        result_dataFrame['t2fecha']= pd.to_datetime(result_dataFrame['t2fecha'])
         #print("DataFrame crudo:\r\n", result_dataFrame.head())
-        print("Paso 4")
+        #print("Paso 4")
     except Exception as e:
         st.write("EXCEPCION: " + str(e))
         print("EXCEPCION: " + str(e))
