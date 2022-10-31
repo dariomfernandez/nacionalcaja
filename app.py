@@ -37,8 +37,8 @@ def get_data_from_mysql():
         #print("Paso 4")
     except Exception as e:
         st.write("EXCEPCION: " + str(e))
-        print("EXCEPCION: " + str(e))
-    mydb.close() #close the connection
+        #print("EXCEPCION: " + str(e))
+    #mydb.close() #close the connection
     return(result_dataFrame)
 
 df = get_data_from_mysql()
