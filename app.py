@@ -27,6 +27,7 @@ def get_data_from_mysql():
         #mydb = mysql.connector.connect(host=st.secrets["db_server"], database = st.secrets["db_name"], port=3306, user=st.secrets["db_username"], password=st.secrets["db_password"])
         #st.write("Paso 2")
         #print("Paso 2")
+        nacionalDatabase = st.secrets["db_name"]
         query = f"SELECT movimiento, numero, IF(flujo='ENTRADA', 1, -1)*importe AS importe, flujo, modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.fnd_movimiento_flujo AS t1 INNER JOIN (SELECT movimiento AS t2movim, numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.fnd_movimiento) AS t2 ON CONCAT(t1.movimiento, t1.numero)=CONCAT(t2.t2movim, t2.t2num) UNION SELECT 'COBRO', cobro, importe, 'ENTRADA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.vta_cobro_medio AS t1 INNER JOIN (SELECT numero AS t2num, fecha AS t2fecha FROM {nacionalDatabase}.vta_cobro) AS t2 ON t1.cobro=t2.t2num UNION SELECT 'PAGO' AS movimiento, pago, -importe AS importe, 'SALIDA', modalidad, caja, DATE(t2fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago_medio AS t1 INNER JOIN (SELECT numero, DATE(fecha) AS t2fecha FROM {nacionalDatabase}.cmp_pago) AS t2 ON t1.pago=t2.numero;"
         #st.write("Paso 3")
         #print("Paso 3")
