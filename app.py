@@ -35,7 +35,7 @@ def get_data_from_mysql():
         #result_dataFrame = pd.read_sql(query, mydb, parse_dates={"t2fecha": {"format": "%d/%m/%y"}})
         result_dataFrame = pd.read_json(gclougfuncurl + "?stmt=" + urllib.parse.quote(query))
         result_dataFrame['t2fecha']= pd.to_datetime(result_dataFrame['t2fecha'])
-        st.write("DataFrame: " + result_dataFrame.head() + " (FIN)")
+        #st.write("DataFrame: " + result_dataFrame.head() + " (FIN)")
         #print("DataFrame crudo:\r\n", result_dataFrame.head())
         #print("Paso 4")
     except Exception as e:
